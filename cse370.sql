@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Apr 08, 2024 at 12:15 PM
+-- Generation Time: Apr 22, 2024 at 12:53 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -39,7 +39,14 @@ CREATE TABLE `apartment_a1` (
 --
 
 INSERT INTO `apartment_a1` (`Flat_ID`, `Floor_no`, `Flat_no`, `Building_no`) VALUES
-('F123', 23, 4, 11);
+('F1', 1, 2, 3),
+('F100', 8, 100, 6),
+('F2', 1, 2, 5),
+('F200', 1, 2, 1),
+('F3', 3, 4, 7),
+('F4', 7, 8, 8),
+('F5', 10, 11, 10),
+('F6', 8, 9, 11);
 
 -- --------------------------------------------------------
 
@@ -57,7 +64,14 @@ CREATE TABLE `apartment_a2` (
 --
 
 INSERT INTO `apartment_a2` (`Building_no`, `Road_no`) VALUES
-(11, 2);
+(1, 2),
+(3, 4),
+(5, 6),
+(6, 6),
+(7, 8),
+(8, 9),
+(10, 11),
+(11, 12);
 
 -- --------------------------------------------------------
 
@@ -70,6 +84,20 @@ CREATE TABLE `apartment_a3` (
   `Building_name` text NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Dumping data for table `apartment_a3`
+--
+
+INSERT INTO `apartment_a3` (`Building_no`, `Building_name`) VALUES
+(1, 'Jahanara Garden'),
+(3, 'Shoikat Misha'),
+(5, 'Sunset Villa'),
+(6, 'Baganbari Tower'),
+(7, 'Enchanted Cottage'),
+(8, 'Serene Haven'),
+(10, 'Nakshi Garden'),
+(11, 'RSA Tower');
+
 -- --------------------------------------------------------
 
 --
@@ -80,6 +108,13 @@ CREATE TABLE `can_have` (
   `C_Flat_ID` varchar(10) NOT NULL,
   `C_Request_ID` int(3) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `can_have`
+--
+
+INSERT INTO `can_have` (`C_Flat_ID`, `C_Request_ID`) VALUES
+('F4', 1);
 
 -- --------------------------------------------------------
 
@@ -97,7 +132,8 @@ CREATE TABLE `flat_owner` (
 --
 
 INSERT INTO `flat_owner` (`O_Resident_ID`, `Owner_ID`) VALUES
-('R123', 'O123');
+('R100', 'O100'),
+('R200', 'O200');
 
 -- --------------------------------------------------------
 
@@ -112,6 +148,13 @@ CREATE TABLE `maintainence_request` (
   `Required_role` text NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Dumping data for table `maintainence_request`
+--
+
+INSERT INTO `maintainence_request` (`Request_ID`, `Status`, `Request_description`, `Required_role`) VALUES
+(1, 0, 'Water Tap broken', 'Plumber');
+
 -- --------------------------------------------------------
 
 --
@@ -122,6 +165,13 @@ CREATE TABLE `makes` (
   `M_Resident_ID` varchar(10) NOT NULL,
   `M_Request_ID` int(3) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `makes`
+--
+
+INSERT INTO `makes` (`M_Resident_ID`, `M_Request_ID`) VALUES
+('R200', 1);
 
 -- --------------------------------------------------------
 
@@ -140,7 +190,9 @@ CREATE TABLE `owns` (
 --
 
 INSERT INTO `owns` (`O_Flat_ID`, `O_Resident_ID`, `O_Owner_ID`) VALUES
-('F123', 'R123', 'O123');
+('F100', 'R100', 'O100'),
+('F2', 'R100', 'O100'),
+('F4', 'R200', 'O200');
 
 -- --------------------------------------------------------
 
@@ -160,9 +212,19 @@ CREATE TABLE `resident` (
 --
 
 INSERT INTO `resident` (`Resident_ID`, `Password`, `Name`, `Contact_num`) VALUES
-('', '', '', 0),
-('R123', 'asdda1231', 'bcd', 123311),
-('R124', 'asdas123', 'asdad', 214124124);
+('R100', 'Far', 'Tanjila', 1234),
+('R200', 'Far', 'Fariha', 1945344268);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `resident_notification`
+--
+
+CREATE TABLE `resident_notification` (
+  `Resident_ID` varchar(10) NOT NULL,
+  `notification` varchar(300) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -187,9 +249,16 @@ CREATE TABLE `sellsorrents` (
   `S_Flat_ID` varchar(10) NOT NULL,
   `O_Resident_ID` varchar(10) NOT NULL,
   `Cost` int(10) NOT NULL,
-  `Rent_or_Sell` varchar(20) NOT NULL,
+  `rent_or_sell` varchar(20) NOT NULL,
   `Description` text NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `sellsorrents`
+--
+
+INSERT INTO `sellsorrents` (`S_Owner_ID`, `S_Flat_ID`, `O_Resident_ID`, `Cost`, `rent_or_sell`, `Description`) VALUES
+('O200', 'F4', 'R200', 123, 'Rent', '1200 sqft');
 
 -- --------------------------------------------------------
 
@@ -208,6 +277,17 @@ CREATE TABLE `service_and_utility_staff` (
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `staff_notification`
+--
+
+CREATE TABLE `staff_notification` (
+  `Staff_ID` varchar(10) NOT NULL,
+  `notification` varchar(300) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `tenant`
 --
 
@@ -217,15 +297,8 @@ CREATE TABLE `tenant` (
   `T_Owner_ID` varchar(10) NOT NULL,
   `T_Flat_ID` varchar(10) NOT NULL,
   `O_Resident_ID` varchar(10) NOT NULL,
-  `Rent_from` text NOT NULL
+  `Rent_from` text DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Dumping data for table `tenant`
---
-
-INSERT INTO `tenant` (`T_Resident_ID`, `Tenant_ID`, `T_Owner_ID`, `T_Flat_ID`, `O_Resident_ID`, `Rent_from`) VALUES
-('R124', 'T123', 'O123', 'F123', 'R123', 'January');
 
 --
 -- Indexes for dumped tables
@@ -292,6 +365,12 @@ ALTER TABLE `resident`
   ADD PRIMARY KEY (`Resident_ID`);
 
 --
+-- Indexes for table `resident_notification`
+--
+ALTER TABLE `resident_notification`
+  ADD PRIMARY KEY (`Resident_ID`,`notification`);
+
+--
 -- Indexes for table `responds_to`
 --
 ALTER TABLE `responds_to`
@@ -311,6 +390,12 @@ ALTER TABLE `sellsorrents`
 --
 ALTER TABLE `service_and_utility_staff`
   ADD PRIMARY KEY (`Staff_ID`);
+
+--
+-- Indexes for table `staff_notification`
+--
+ALTER TABLE `staff_notification`
+  ADD PRIMARY KEY (`Staff_ID`,`notification`);
 
 --
 -- Indexes for table `tenant`
@@ -366,6 +451,12 @@ ALTER TABLE `owns`
   ADD CONSTRAINT `owns_ibfk_3` FOREIGN KEY (`O_Owner_ID`) REFERENCES `flat_owner` (`Owner_ID`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
+-- Constraints for table `resident_notification`
+--
+ALTER TABLE `resident_notification`
+  ADD CONSTRAINT `resident_notification_ibfk_1` FOREIGN KEY (`Resident_ID`) REFERENCES `resident` (`Resident_ID`);
+
+--
 -- Constraints for table `responds_to`
 --
 ALTER TABLE `responds_to`
@@ -379,6 +470,12 @@ ALTER TABLE `sellsorrents`
   ADD CONSTRAINT `sellsorrents_ibfk_1` FOREIGN KEY (`S_Owner_ID`) REFERENCES `flat_owner` (`Owner_ID`) ON DELETE CASCADE ON UPDATE CASCADE,
   ADD CONSTRAINT `sellsorrents_ibfk_2` FOREIGN KEY (`S_Flat_ID`) REFERENCES `apartment_a1` (`Flat_ID`) ON DELETE CASCADE ON UPDATE CASCADE,
   ADD CONSTRAINT `sellsorrents_ibfk_3` FOREIGN KEY (`O_Resident_ID`) REFERENCES `flat_owner` (`O_Resident_ID`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Constraints for table `staff_notification`
+--
+ALTER TABLE `staff_notification`
+  ADD CONSTRAINT `staff_notification_ibfk_1` FOREIGN KEY (`Staff_ID`) REFERENCES `service_and_utility_staff` (`Staff_ID`);
 
 --
 -- Constraints for table `tenant`
