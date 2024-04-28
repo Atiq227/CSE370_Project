@@ -18,6 +18,15 @@ if ($check_result->num_rows > 0) {
 }
 
 
+$check_query_tenant = "SELECT * FROM tenant WHERE Tenant_ID = '$Tenant_ID'";
+$check_result_tenant = $conn->query($check_query_tenant);
+if ($check_result_tenant->num_rows > 0) {
+    echo "A tenant with the given Tenant_ID already exists";
+    $conn->close();
+    exit();
+}
+
+// Fetch T_Owner_ID and O_Resident_ID based on T_Flat_ID
 $query = "SELECT O_Owner_ID, O_Resident_ID FROM owns WHERE O_Flat_ID = '$T_Flat_ID'";
 $result = $conn->query($query);
 if ($result->num_rows > 0) {
