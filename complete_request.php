@@ -4,7 +4,7 @@ session_start();
 include("dbconnect.php");
 $Resident_ID = $_SESSION['Resident_ID'];
 $request_id = $_POST['request_id'];
-echo "$request_id";
+
 
 
 if(isset($_POST['complete_request'])) {
