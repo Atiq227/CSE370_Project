@@ -7,8 +7,9 @@ $Cost = $_POST['Cost'];
 $rent_or_sell = $_POST['rent_or_sell'];
 $description = $_POST['Description'];
 $flag=0;
-if (isset($_POST['Flat_ID']) && isset($_POST['Cost']) && isset($_POST['rent_or_sell']) && isset($_POST['Description'])) {
-
+if (empty($Resident_ID) or empty($Flat_ID) or empty($Cost) or empty($rent_or_sell) or empty($description)) {
+	echo "required field is empty";
+} else {
 	$query="SELECT O_Flat_ID FROM owns WHERE O_Resident_ID='$Resident_ID'";
 	$result = $conn->query($query);
 	if ($result->num_rows > 0) {

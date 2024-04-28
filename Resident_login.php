@@ -16,7 +16,7 @@ else {
 		if ($type=='Flat Owner') {
 			header('Location: http://localhost/CSE370_project/Flat_Owner.html');
 		} elseif ($type=='Tenant') {
-			header('Location: http://localhost/CSE370_project/Flat_Owner.html');
+			header('Location: http://localhost/CSE370_project/Tenant.html');
 		}
 	}
 	else {

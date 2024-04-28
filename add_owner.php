@@ -8,7 +8,7 @@ $Owner_ID = $_POST['Owner_ID'];
 $Flat_ID = $_POST['Flat_ID'];
 $otp= $_POST['otp'];
 $flag=0;
-if (empty($Flat_ID) or empty($Owner_ID) or empty($password) or empty($Contact_num) or empty($Name) or empty($Resident_ID)) {
+if (empty($Flat_ID) or empty($Owner_ID) or empty($password) or empty($Contact_num) or empty($Name) or empty($Resident_ID) or empty($otp)) {
 	echo "required field is empty.";
 	}
 else {
@@ -22,6 +22,19 @@ else {
 
 			}
 		}
+	}
+	if ($flag==0) {
+		$query3="SELECT Owner_ID FROM flat_owner";
+		$result3 = $conn->query($query3);
+		if ($result3->num_rows > 0) {
+			while ($row3 = $result3->fetch_assoc()) {
+				if ($row3['Owner_ID']=== $Owner_ID) {
+					$flag=1;
+					echo "This Owner_ID Already Exists";
+				}
+			}
+		}
+
 	}
 	if ($flag==0) {
 		$query="SELECT Flat_ID,otp FROM apartment_a1";
