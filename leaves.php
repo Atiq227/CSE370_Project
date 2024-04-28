@@ -2,7 +2,7 @@
 session_start();
 require_once("dbconnect.php");
 
-// Retrieve T_Resident_ID from the session
+
 $L_Resident_ID = $_SESSION['Resident_ID'];
 
 if ($L_Resident_ID === '') {
@@ -30,7 +30,7 @@ if ($conn->query($sql2) === TRUE) {
     $sql2 = "INSERT INTO resident_notification (Resident_ID, Notification) VALUES ('$resident_id', '$Notification');";
 }
 
-// Perform deletion based on $T_Resident_ID
+
 $sql = "DELETE FROM resident WHERE Resident_ID = '$L_Resident_ID'";
 
 if ($conn->query($sql) === TRUE) {
