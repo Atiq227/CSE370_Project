@@ -8,6 +8,7 @@ $Request_ID = $_POST['Request_ID'];
 $Flat_ID = $_POST['Flat_ID'];
 $Required_role = $_POST['Required_role'];
 $Request_description = $_POST['Request_description']; 
+$Wage = $_POST['Wage'];
 if (empty($Flat_ID) or empty($Request_ID) or empty($Required_role) or empty($Request_description)) {
 	echo "required field is empty.";
 	}
@@ -26,8 +27,8 @@ else {
 			while ($row1 = $result1->fetch_assoc()) {
 				if ($row1['O_Flat_ID']=== $Flat_ID && $row1['T_Flat_ID']==NULL) {
 					$flag1=1;
-					$sql = "INSERT INTO maintainence_request (Request_ID,Resident_ID,Flat_ID,Status,Request_description,Required_role)
-					VALUES ('$Request_ID', '$Resident_ID', '$Flat_ID', 0,'$Request_description', '$Required_role')";
+					$sql = "INSERT INTO maintainence_request (Request_ID,Resident_ID,Flat_ID,Status,Request_description,Required_role,Wage)
+					VALUES ('$Request_ID', '$Resident_ID', '$Flat_ID', 0,'$Request_description', '$Required_role', '$Wage')";
 					if ($conn->multi_query($sql) == TRUE) {
 					  echo "New request created successfully";
 					} else {
@@ -53,8 +54,8 @@ else {
 		if ($result2->num_rows > 0) {
 			$row2 = $result2->fetch_assoc();
 				if ($row2['T_Flat_ID']===$Flat_ID) {
-					$sql= "INSERT INTO maintainence_request (Request_ID, Resident_ID,Flat_ID,Status,Request_description,Required_role)
-					VALUES ('$Request_ID', '$Resident_ID', '$Flat_ID', 0,'$Request_description', '$Required_role')";
+					$sql= "INSERT INTO maintainence_request (Request_ID, Resident_ID,Flat_ID,Status,Request_description,Required_role,Wage)
+					VALUES ('$Request_ID', '$Resident_ID', '$Flat_ID', 0,'$Request_description', '$Required_role','$Wage')";
 					if ($conn->multi_query($sql) == TRUE) {
 					  echo "New request created successfully";
 					} else {
