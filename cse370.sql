@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Apr 23, 2024 at 05:47 PM
+-- Generation Time: Apr 28, 2024 at 01:35 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -46,8 +46,8 @@ INSERT INTO `apartment_a1` (`Flat_ID`, `Floor_no`, `Flat_no`, `Building_no`, `ot
 ('F200', 1, 2, 1, 'BSM'),
 ('F3', 3, 4, 7, 'BSM'),
 ('F4', 7, 8, 8, 'BSM'),
-('F5', 10, 11, 10, 'BSM'),
-('F6', 8, 9, 11, 'BSM');
+('F5', 10, 11, 10, 'Fgh'),
+('F6', 8, 9, 11, 'Far');
 
 -- --------------------------------------------------------
 
@@ -130,8 +130,19 @@ CREATE TABLE `maintainence_request` (
   `Flat_ID` varchar(10) NOT NULL,
   `Status` tinyint(1) NOT NULL,
   `Request_description` text NOT NULL,
-  `Required_role` text NOT NULL
+  `Required_role` text NOT NULL,
+  `a_staff_id` varchar(10) DEFAULT NULL,
+  `s_contact` int(14) DEFAULT NULL,
+  `Wage` int(14) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `maintainence_request`
+--
+
+INSERT INTO `maintainence_request` (`Request_ID`, `Resident_ID`, `Flat_ID`, `Status`, `Request_description`, `Required_role`, `a_staff_id`, `s_contact`, `Wage`) VALUES
+(100, 'R100', 'F100', 0, 'Water Tap broken', 'Utility Technician', NULL, NULL, 120),
+(200, 'R100', 'F100', 1, 'Water Tap broken', 'Plumber', 'S200', 1945344268, 120);
 
 -- --------------------------------------------------------
 
@@ -152,7 +163,8 @@ CREATE TABLE `owns` (
 INSERT INTO `owns` (`O_Flat_ID`, `O_Resident_ID`, `O_Owner_ID`) VALUES
 ('F100', 'R100', 'O100'),
 ('F2', 'R100', 'O100'),
-('F4', 'R200', 'O200');
+('F4', 'R200', 'O200'),
+('F5', 'R100', 'O100');
 
 -- --------------------------------------------------------
 
@@ -184,28 +196,18 @@ INSERT INTO `resident` (`Resident_ID`, `Password`, `Name`, `Contact_num`) VALUES
 
 CREATE TABLE `resident_notification` (
   `Resident_ID` varchar(10) NOT NULL,
-  `notification` varchar(300) NOT NULL,
-  `type` varchar(10) NOT NULL
+  `notification` varchar(300) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `resident_notification`
 --
 
-INSERT INTO `resident_notification` (`Resident_ID`, `notification`, `type`) VALUES
-('R400', 'Notice: Rent will change to 123 from January.', '');
-
--- --------------------------------------------------------
-
---
--- Table structure for table `responds_to`
---
-
-CREATE TABLE `responds_to` (
-  `R_Staff_ID` varchar(10) NOT NULL,
-  `R_Request_ID` int(3) NOT NULL,
-  `Wage` int(5) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+INSERT INTO `resident_notification` (`Resident_ID`, `notification`) VALUES
+('R400', 'Notice from R100:Rent will change to  from .'),
+('R400', 'Notice from R100:Rent will change to 12 from 2024-01.'),
+('R400', 'Notice from R100:Rent will change to 1234 from 2024-01.'),
+('R400', 'Notice: Rent will change to 123 from January.');
 
 -- --------------------------------------------------------
 
@@ -242,6 +244,13 @@ CREATE TABLE `service_and_utility_staff` (
   `Role` text NOT NULL,
   `Contact_num` int(14) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `service_and_utility_staff`
+--
+
+INSERT INTO `service_and_utility_staff` (`Staff_ID`, `Password`, `Name`, `Role`, `Contact_num`) VALUES
+('S200', 'Far', 'Moinul', 'Plumber', 1945344268);
 
 -- --------------------------------------------------------
 
@@ -301,7 +310,8 @@ ALTER TABLE `flat_owner`
 ALTER TABLE `maintainence_request`
   ADD PRIMARY KEY (`Request_ID`),
   ADD KEY `Flat_ID` (`Flat_ID`),
-  ADD KEY `Resident_ID` (`Resident_ID`);
+  ADD KEY `Resident_ID` (`Resident_ID`),
+  ADD KEY `a_staff_id` (`a_staff_id`);
 
 --
 -- Indexes for table `owns`
@@ -322,13 +332,6 @@ ALTER TABLE `resident`
 --
 ALTER TABLE `resident_notification`
   ADD PRIMARY KEY (`Resident_ID`,`notification`);
-
---
--- Indexes for table `responds_to`
---
-ALTER TABLE `responds_to`
-  ADD PRIMARY KEY (`R_Staff_ID`,`R_Request_ID`),
-  ADD KEY `R_Request_ID` (`R_Request_ID`);
 
 --
 -- Indexes for table `sellsorrents`
@@ -380,7 +383,8 @@ ALTER TABLE `flat_owner`
 --
 ALTER TABLE `maintainence_request`
   ADD CONSTRAINT `maintainence_request_ibfk_1` FOREIGN KEY (`Flat_ID`) REFERENCES `apartment_a1` (`Flat_ID`),
-  ADD CONSTRAINT `maintainence_request_ibfk_2` FOREIGN KEY (`Resident_ID`) REFERENCES `resident` (`Resident_ID`);
+  ADD CONSTRAINT `maintainence_request_ibfk_2` FOREIGN KEY (`Resident_ID`) REFERENCES `resident` (`Resident_ID`),
+  ADD CONSTRAINT `maintainence_request_ibfk_3` FOREIGN KEY (`a_staff_id`) REFERENCES `service_and_utility_staff` (`Staff_ID`);
 
 --
 -- Constraints for table `owns`
@@ -395,13 +399,6 @@ ALTER TABLE `owns`
 --
 ALTER TABLE `resident_notification`
   ADD CONSTRAINT `resident_notification_ibfk_1` FOREIGN KEY (`Resident_ID`) REFERENCES `resident` (`Resident_ID`);
-
---
--- Constraints for table `responds_to`
---
-ALTER TABLE `responds_to`
-  ADD CONSTRAINT `responds_to_ibfk_1` FOREIGN KEY (`R_Request_ID`) REFERENCES `maintainence_request` (`Request_ID`) ON DELETE CASCADE ON UPDATE CASCADE,
-  ADD CONSTRAINT `responds_to_ibfk_2` FOREIGN KEY (`R_Staff_ID`) REFERENCES `service_and_utility_staff` (`Staff_ID`) ON DELETE NO ACTION ON UPDATE NO ACTION;
 
 --
 -- Constraints for table `sellsorrents`
