@@ -8,6 +8,11 @@ $password = $_POST['password'];
 $Contact_num = $_POST['Contact_num'];
 $Name = $_POST['Name'];
 
+if(empty($T_Resident_ID) || empty($Tenant_ID) || empty($T_Flat_ID) || empty($password) || empty($Contact_num) || empty($Name)) {
+    echo "All fields must be filled out";
+    $conn->close();
+    exit();
+}
 
 $check_query = "SELECT * FROM resident WHERE Resident_ID = '$T_Resident_ID'";
 $check_result = $conn->query($check_query);
@@ -17,7 +22,6 @@ if ($check_result->num_rows > 0) {
     exit();
 }
 
-
 $check_query_tenant = "SELECT * FROM tenant WHERE Tenant_ID = '$Tenant_ID'";
 $check_result_tenant = $conn->query($check_query_tenant);
 if ($check_result_tenant->num_rows > 0) {
@@ -26,7 +30,6 @@ if ($check_result_tenant->num_rows > 0) {
     exit();
 }
 
-// Fetch T_Owner_ID and O_Resident_ID based on T_Flat_ID
 $query = "SELECT O_Owner_ID, O_Resident_ID FROM owns WHERE O_Flat_ID = '$T_Flat_ID'";
 $result = $conn->query($query);
 if ($result->num_rows > 0) {
